@@ -9,25 +9,22 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 
 	var WIDTH = 600, HEIGHT = 400, DEPTH = 400 + 5; // prevent z-fighting
 
-	window.calcFov = function calcFov(distance) {
+	function calcFov(distance) {
 		return (360 * Math.atan(HEIGHT / (2 * distance))) / Math.PI;
-	};
+	}
 
-	window.calcDistance = function calcDistance(fov) {
+	function calcDistance(fov) {
 		return HEIGHT / (2 * Math.tan(fov / 360 * Math.PI));
-	};
+	}
 
 	var options = {};
 	options[DISTANCE] = 500;
 	options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
 	options[FOV] = calcFov(options[DISTANCE]);
 
-	console.log(calcFov(options[DISTANCE]), calcFov(MIN), calcFov(MAX))
-
 	var container = $('#container');
 
 	var scene = new THREE.Scene();
-	// scene.add(new THREE.AxisHelper());
 
 	var texture = THREE.ImageUtils.loadTexture("images/noun_project_308.png");
 
