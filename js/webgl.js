@@ -25,6 +25,7 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 	var container = $('#container');
 
 	var scene = new THREE.Scene();
+	scene.add(new THREE.AxisHelper());
 
 	var texture = THREE.ImageUtils.loadTexture("images/noun_project_308.png");
 
@@ -49,12 +50,26 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 		mesh.doubleSided = true;
 		mesh.rotation.x = Math.PI / 2;
 		scene.add(mesh);
+
+		geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
+		mesh = new THREE.Mesh(geometry, material);
+		mesh.position.set.apply(mesh.position, pos);
+		mesh.doubleSided = true;
+		scene.add(mesh);
 	});
 
 	var camera = new THREE.PerspectiveCamera(options[FOV], WIDTH / HEIGHT, options[DISTANCE]
 			- DEPTH / 2, options[DISTANCE] + DEPTH / 2);
 	camera.position.z = options[DISTANCE];
 	scene.add(camera);
+
+	var cameraHelper = new THREE.CameraHelper(camera);
+	scene.add(cameraHelper);
+
+	var revealCamera = new THREE.OrthographicCamera(-750, 250, -500, 500, 1, 10000);
+	revealCamera.position.y = 1000;
+	revealCamera.lookAt(new THREE.Vector3(0, 0, 0));
+	scene.add(revealCamera);
 
 	var renderer = new THREE.WebGLRenderer({
 		canvas : container[0]
@@ -84,6 +99,8 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 		camera.far = options[DISTANCE] + DEPTH / 2;
 		camera.position.z = options[DISTANCE];
 		camera.updateProjectionMatrix();
+		cameraHelper.update();
+		cameraHelper.lines.position = camera.position;
 
 		renderer.render(scene, camera);
 	}, container[0]);
