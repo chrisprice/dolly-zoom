@@ -123,11 +123,12 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 			cameraHelper.update();
 			cameraHelper.lines.position = camera.position;
 
-			THREE.SceneUtils.showHierarchy(axisHelper, options[AXIS_HELPER]);
-			THREE.SceneUtils.showHierarchy(cameraHelper, options[FRUSTUM]);
-		}
+			// move out of camera view, visibility causes strobing
+			axisHelper.position.x = options[AXIS_HELPER] ? 0 : 1000000;
+			cameraHelper.position.x = options[FRUSTUM] ? 0 : 1000000;
 
-		renderer.render(scene, options[REVEAL_CAMERA] ? revealCamera : camera);
+			renderer.render(scene, options[REVEAL_CAMERA] ? revealCamera : camera);
+		}
 
 		options.needsUpdate = false;
 	}, container[0]);
