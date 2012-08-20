@@ -1,4 +1,5 @@
-require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, transform) {
+require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ], function($,
+		transform, constants) {
 
 	var LOG_DISTANCE = 'log(distance)';
 	var FOV = 'fov';
@@ -6,9 +7,6 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 	var REVEAL_CAMERA = 'alternativeView';
 	var FRUSTUM = 'cameraFrustum';
 	var AXIS_HELPER = 'originMarker';
-
-	var MIN = 425;
-	var MAX = 100000;
 
 	var WIDTH = 600, HEIGHT = 400, DEPTH = 400 + 5; // prevent z-fighting
 
@@ -41,16 +39,7 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 				options.needsUpdate = true;
 			});
 
-	var positions = [
-			[ -200, 0, 200 ],
-			[ 200, 0, 200 ],
-			[ -200, 0, 0 ],
-			[ 0, 0, 0 ],
-			[ 200, 0, 0 ],
-			[ -200, 0, -200 ],
-			[ 200, 0, -200 ] ];
-
-	positions.forEach(function(pos) {
+	constants.positions.forEach(function(pos) {
 		var material = new THREE.MeshBasicMaterial({
 			map : texture,
 			transparent : true,
@@ -85,21 +74,23 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 	renderer.setSize(WIDTH, HEIGHT);
 
 	var gui = new dat.GUI();
-	gui.add(options, LOG_DISTANCE, Math.log(MIN), Math.log(MAX)).listen().onChange(function() {
-		options[DISTANCE] = Math.exp(options[LOG_DISTANCE]);
-		options[FOV] = calcFov(options[DISTANCE]);
-		options.needsUpdate = true;
-	});
-	gui.add(options, DISTANCE, MIN, MAX).listen().onChange(function() {
+	gui.add(options, LOG_DISTANCE, Math.log(constants.min), Math.log(constants.max)).listen()
+			.onChange(function() {
+				options[DISTANCE] = Math.exp(options[LOG_DISTANCE]);
+				options[FOV] = calcFov(options[DISTANCE]);
+				options.needsUpdate = true;
+			});
+	gui.add(options, DISTANCE, constants.min, constants.max).listen().onChange(function() {
 		options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
 		options[FOV] = calcFov(options[DISTANCE]);
 		options.needsUpdate = true;
 	});
-	gui.add(options, FOV, calcFov(MAX), calcFov(MIN)).listen().onChange(function() {
-		options[DISTANCE] = calcDistance(options[FOV]);
-		options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
-		options.needsUpdate = true;
-	});
+	gui.add(options, FOV, calcFov(constants.max), calcFov(constants.min)).listen().onChange(
+			function() {
+				options[DISTANCE] = calcDistance(options[FOV]);
+				options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
+				options.needsUpdate = true;
+			});
 	gui.add(options, REVEAL_CAMERA).onChange(function() {
 		options.needsUpdate = true;
 	});
