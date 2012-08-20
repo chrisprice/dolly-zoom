@@ -3,6 +3,9 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 	var LOG_DISTANCE = 'log(distance)';
 	var FOV = 'fov';
 	var DISTANCE = 'distance';
+	var REVEAL_CAMERA = 'alternativeView';
+	var FRUSTUM = 'cameraFrustum';
+	var AXIS_HELPER = 'originMarker';
 
 	var MIN = 425;
 	var MAX = 100000;
@@ -21,13 +24,22 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 	options[DISTANCE] = 500;
 	options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
 	options[FOV] = calcFov(options[DISTANCE]);
+	options[REVEAL_CAMERA] = false;
+	options[FRUSTUM] = false;
+	options[AXIS_HELPER] = false;
+	options.needsUpdate = false;
 
 	var container = $('#container');
 
 	var scene = new THREE.Scene();
-	scene.add(new THREE.AxisHelper());
 
-	var texture = THREE.ImageUtils.loadTexture("images/noun_project_308.png");
+	var axisHelper = new THREE.AxisHelper();
+	scene.add(axisHelper);
+
+	var texture = THREE.ImageUtils.loadTexture("images/noun_project_308.png",
+			new THREE.UVMapping(), function() {
+				options.needsUpdate = true;
+			});
 
 	var positions = [
 			[ -200, 0, 200 ],
@@ -50,12 +62,6 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 		mesh.doubleSided = true;
 		mesh.rotation.x = Math.PI / 2;
 		scene.add(mesh);
-
-		geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
-		mesh = new THREE.Mesh(geometry, material);
-		mesh.position.set.apply(mesh.position, pos);
-		mesh.doubleSided = true;
-		scene.add(mesh);
 	});
 
 	var camera = new THREE.PerspectiveCamera(options[FOV], WIDTH / HEIGHT, options[DISTANCE]
@@ -66,8 +72,10 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 	var cameraHelper = new THREE.CameraHelper(camera);
 	scene.add(cameraHelper);
 
-	var revealCamera = new THREE.OrthographicCamera(-750, 250, -500, 500, 1, 10000);
+	var revealCamera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 1, 10000);
+	revealCamera.position.x = 1000;
 	revealCamera.position.y = 1000;
+	revealCamera.position.z = -1000;
 	revealCamera.lookAt(new THREE.Vector3(0, 0, 0));
 	scene.add(revealCamera);
 
@@ -80,28 +88,47 @@ require([ './jquery', './transform', './dat.gui.min', './Three' ], function($, t
 	gui.add(options, LOG_DISTANCE, Math.log(MIN), Math.log(MAX)).listen().onChange(function() {
 		options[DISTANCE] = Math.exp(options[LOG_DISTANCE]);
 		options[FOV] = calcFov(options[DISTANCE]);
+		options.needsUpdate = true;
 	});
 	gui.add(options, DISTANCE, MIN, MAX).listen().onChange(function() {
 		options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
 		options[FOV] = calcFov(options[DISTANCE]);
+		options.needsUpdate = true;
 	});
 	gui.add(options, FOV, calcFov(MAX), calcFov(MIN)).listen().onChange(function() {
 		options[DISTANCE] = calcDistance(options[FOV]);
 		options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
+		options.needsUpdate = true;
 	});
-	;
+	gui.add(options, REVEAL_CAMERA).onChange(function() {
+		options.needsUpdate = true;
+	});
+	gui.add(options, AXIS_HELPER).onChange(function() {
+		options.needsUpdate = true;
+	});
+	gui.add(options, FRUSTUM).onChange(function() {
+		options.needsUpdate = true;
+	});
 
 	requestAnimationFrame(function loop() {
 		requestAnimationFrame(loop, container[0]);
 
-		camera.fov = options[FOV];
-		camera.near = options[DISTANCE] - DEPTH / 2;
-		camera.far = options[DISTANCE] + DEPTH / 2;
-		camera.position.z = options[DISTANCE];
-		camera.updateProjectionMatrix();
-		cameraHelper.update();
-		cameraHelper.lines.position = camera.position;
+		if (options.needsUpdate) {
+			camera.fov = options[FOV];
+			camera.near = options[DISTANCE] - DEPTH / 2;
+			camera.far = options[DISTANCE] + DEPTH / 2;
+			camera.position.z = options[DISTANCE];
+			camera.updateProjectionMatrix();
 
-		renderer.render(scene, camera);
+			cameraHelper.update();
+			cameraHelper.lines.position = camera.position;
+
+			THREE.SceneUtils.showHierarchy(axisHelper, options[AXIS_HELPER]);
+			THREE.SceneUtils.showHierarchy(cameraHelper, options[FRUSTUM]);
+		}
+
+		renderer.render(scene, options[REVEAL_CAMERA] ? revealCamera : camera);
+
+		options.needsUpdate = false;
 	}, container[0]);
 });
