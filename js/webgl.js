@@ -4,6 +4,7 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 	var LOG_DISTANCE = 'log(distance)';
 	var FOV = 'fov';
 	var DISTANCE = 'distance';
+	var CONSTRAIN = 'constrainValues';
 	var REVEAL_CAMERA = 'alternativeView';
 	var FRUSTUM = 'cameraFrustum';
 	var AXIS_HELPER = 'originMarker';
@@ -22,6 +23,7 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 	options[DISTANCE] = 500;
 	options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
 	options[FOV] = calcFov(options[DISTANCE]);
+	options[CONSTRAIN] = true;
 	options[REVEAL_CAMERA] = false;
 	options[FRUSTUM] = false;
 	options[AXIS_HELPER] = false;
@@ -77,20 +79,32 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 	gui.add(options, LOG_DISTANCE, Math.log(constants.min), Math.log(constants.max)).listen()
 			.onChange(function() {
 				options[DISTANCE] = Math.exp(options[LOG_DISTANCE]);
-				options[FOV] = calcFov(options[DISTANCE]);
+				if (options[CONSTRAIN]) {
+					options[FOV] = calcFov(options[DISTANCE]);
+				}
 				options.needsUpdate = true;
 			});
 	gui.add(options, DISTANCE, constants.min, constants.max).listen().onChange(function() {
 		options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
-		options[FOV] = calcFov(options[DISTANCE]);
+		if (options[CONSTRAIN]) {
+			options[FOV] = calcFov(options[DISTANCE]);
+		}
 		options.needsUpdate = true;
 	});
 	gui.add(options, FOV, calcFov(constants.max), calcFov(constants.min)).listen().onChange(
 			function() {
-				options[DISTANCE] = calcDistance(options[FOV]);
-				options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
+				if (options[CONSTRAIN]) {
+					options[DISTANCE] = calcDistance(options[FOV]);
+					options[LOG_DISTANCE] = Math.log(options[DISTANCE]);
+				}
 				options.needsUpdate = true;
 			});
+	gui.add(options, CONSTRAIN).onChange(function() {
+		if (options[CONSTRAIN]) {
+			options[FOV] = calcFov(options[DISTANCE]);
+		}
+		options.needsUpdate = true;
+	});
 	gui.add(options, REVEAL_CAMERA).onChange(function() {
 		options.needsUpdate = true;
 	});
