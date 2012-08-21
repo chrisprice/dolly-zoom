@@ -125,8 +125,10 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 			camera.position.z = options[DISTANCE];
 			camera.updateProjectionMatrix();
 
+			camera.updateMatrix();
+			cameraHelper.matrix.identity();
+			cameraHelper.applyMatrix(camera.matrix);
 			cameraHelper.update();
-			cameraHelper.lines.position = camera.position;
 
 			// move out of camera view, visibility causes strobing
 			axisHelper.position.x = options[AXIS_HELPER] ? 0 : 1000000;
