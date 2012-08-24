@@ -35,13 +35,18 @@ define([ './jquery' ], function($) {
 			return this;
 		},
 		scale : function(sx, sy, sz) {
-			$.each(this,
-					function() {
-						sy = sy !== undefined ? sy : sx;
-						sz = sz !== undefined ? sz : sx;
-						applyPrefixed(this, 'transform', 'scale3d(' + sx + ',' + sy + ',' + sz
-								+ ')', true);
-					});
+			$.each(this, function() {
+				sy = sy !== undefined ? sy : sx;
+				sz = sz !== undefined ? sz : sx;
+				applyPrefixed(this, 'transform', 'scale3d(' + sx.toFixed(5) + ',' + sy.toFixed(5)
+						+ ',' + sz.toFixed(5) + ')', true);
+			});
+			return this;
+		},
+		rotateZ : function(a) {
+			$.each(this, function() {
+				applyPrefixed(this, 'transform', 'rotateZ(' + numberToDeg(a) + ')', true);
+			});
 			return this;
 		},
 		rotateX : function(a) {
@@ -77,6 +82,21 @@ define([ './jquery' ], function($) {
 		perspective : function(value) {
 			$.each(this, function() {
 				applyPrefixed(this, 'perspective', numberToPx(value));
+			});
+			return this;
+		},
+		backfaceVisible : function(value) {
+			$.each(this, function() {
+				applyPrefixed(this, 'backfaceVisibility', value ? 'visible' : 'hidden');
+			});
+			return this;
+		},
+		matrix : function(values) {
+			$.each(this, function() {
+				for ( var i = 0; i < values.length; i++) {
+					values[i] = values[i].toFixed(5);
+				}
+				applyPrefixed(this, 'transform', 'matrix3d(' + values.join(',') + ')', true);
 			});
 			return this;
 		},
