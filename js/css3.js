@@ -8,7 +8,7 @@ require([ './jquery', './transform', './constants', './css3-geometry', './dat.gu
 	var options = {};
 	options[PERSPECTIVE] = 500;
 	options[LOG_PERSPECTIVE] = Math.log(options[PERSPECTIVE]);
-	options.translateZ = 0;
+	options.translateZ = 432;
 	options.translateY = 0;
 
 	var container = $('#container').perspective(options[PERSPECTIVE]);

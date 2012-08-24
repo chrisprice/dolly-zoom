@@ -1,5 +1,5 @@
-require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ], function($,
-		transform, constants) {
+require([ './jquery', './constants', './webgl-geometry', './dat.gui.min', './Three' ], function($,
+		constants, geometry) {
 
 	var LOG_DISTANCE = 'log(distance)';
 	var FOV = 'fov';
@@ -9,7 +9,7 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 	var FRUSTUM = 'cameraFrustum';
 	var AXIS_HELPER = 'originMarker';
 
-	var WIDTH = 600, HEIGHT = 400, DEPTH = 400 + 5; // prevent z-fighting
+	var WIDTH = 600, HEIGHT = 400, DEPTH = 5000;
 
 	function calcFov(distance) {
 		return (360 * Math.atan(HEIGHT / (2 * distance))) / Math.PI;
@@ -33,6 +33,8 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 
 	var scene = new THREE.Scene();
 
+	scene.add(geometry.create());
+
 	var axisHelper = new THREE.AxisHelper();
 	scene.add(axisHelper);
 
@@ -41,22 +43,22 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 				options.needsUpdate = true;
 			});
 
-	constants.positions.forEach(function(pos) {
-		var material = new THREE.MeshBasicMaterial({
-			map : texture,
-			transparent : true,
-			opacity : 0.5
-		});
-		var geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
-		var mesh = new THREE.Mesh(geometry, material);
-		mesh.position.set.apply(mesh.position, pos);
-		mesh.doubleSided = true;
-		mesh.rotation.x = Math.PI / 2;
-		scene.add(mesh);
-	});
+	// constants.positions.forEach(function(pos) {
+	// var material = new THREE.MeshBasicMaterial({
+	// map : texture,
+	// transparent : true,
+	// opacity : 0.5
+	// });
+	// var geometry = new THREE.PlaneGeometry(100, 100, 1, 1);
+	// var mesh = new THREE.Mesh(geometry, material);
+	// mesh.position.set.apply(mesh.position, pos);
+	// mesh.doubleSided = true;
+	// mesh.rotation.x = Math.PI / 2;
+	// scene.add(mesh);
+	// });
 
-	var camera = new THREE.PerspectiveCamera(options[FOV], WIDTH / HEIGHT, options[DISTANCE]
-			- DEPTH / 2, options[DISTANCE] + DEPTH / 2);
+	var camera = new THREE.PerspectiveCamera(options[FOV], WIDTH / HEIGHT, options[DISTANCE] - 5,
+			options[DISTANCE] + DEPTH + 5);
 	camera.position.z = options[DISTANCE];
 	scene.add(camera);
 
@@ -64,15 +66,18 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 	scene.add(cameraHelper);
 
 	var revealCamera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 1, 10000);
-	revealCamera.position.x = 1000;
-	revealCamera.position.y = 1000;
-	revealCamera.position.z = -1000;
+	revealCamera.position.x = 100;
+	revealCamera.position.y = 100;
+	revealCamera.position.z = 1000;
 	revealCamera.lookAt(new THREE.Vector3(0, 0, 0));
 	scene.add(revealCamera);
 
 	var renderer = new THREE.WebGLRenderer({
-		canvas : container[0]
+		canvas : container[0],
+		antialias : true,
+		maxLights : 20
 	});
+	renderer.shadowMapEnabled = true;
 	renderer.setSize(WIDTH, HEIGHT);
 
 	var gui = new dat.GUI();
@@ -120,8 +125,8 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 
 		if (options.needsUpdate) {
 			camera.fov = options[FOV];
-			camera.near = options[DISTANCE] - DEPTH / 2;
-			camera.far = options[DISTANCE] + DEPTH / 2;
+			camera.near = options[DISTANCE] - 5;
+			camera.far = options[DISTANCE] + DEPTH + 5;
 			camera.position.z = options[DISTANCE];
 			camera.updateProjectionMatrix();
 

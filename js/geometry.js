@@ -1,12 +1,45 @@
 define(function() {
-	var WIDTH = 400;
+	var WIDTH = 600;
 	var FLIGHT_COUNT = 12;
 	var STEP_COUNT = 8;
 	var STEP_WIDTH = WIDTH / 6;
 	var STEP_HEIGHT = (WIDTH - 2 * STEP_WIDTH) / STEP_COUNT;
 	var STEP_DEPTH = STEP_HEIGHT;
 	var FLIGHT_DEPTH = STEP_DEPTH * STEP_COUNT;
-	var DEPTH = FLIGHT_DEPTH * FLIGHT_COUNT;
+	var DEPTH = FLIGHT_DEPTH * (FLIGHT_COUNT);
+	var PILLAR_WIDTH = STEP_WIDTH / 5;
+
+	function makeVerticalTube(cb, x, y, width, type, insideOut) {
+		var rotYOffset = insideOut ? Math.PI : 0;
+		cb({// top
+			position : [ x, y + width / 2, -DEPTH / 2 ],
+			rotation : [ -Math.PI / 2, rotYOffset, 0 ],
+			height : DEPTH,
+			width : width,
+			type : type
+		});
+		cb({// right
+			position : [ x + width / 2, y, -DEPTH / 2 ],
+			rotation : [ -Math.PI / 2, rotYOffset - Math.PI / 2, 0 ],
+			height : DEPTH,
+			width : width,
+			type : type
+		});
+		cb({// bottom
+			position : [ x, y - width / 2, -DEPTH / 2 ],
+			rotation : [ -Math.PI / 2, rotYOffset - Math.PI, 0 ],
+			height : DEPTH,
+			width : width,
+			type : type
+		});
+		cb({// left
+			position : [ x - width / 2, y, -DEPTH / 2 ],
+			rotation : [ -Math.PI / 2, rotYOffset + Math.PI / 2, 0 ],
+			height : DEPTH,
+			width : width,
+			type : type
+		});
+	}
 
 	function makeSteps(cb, index, offset) {
 		for ( var i = 0; i < STEP_COUNT; i++) {
@@ -42,6 +75,12 @@ define(function() {
 				width : STEP_WIDTH,
 				type : 'step'
 			});
+			if (i === Math.round(STEP_COUNT / 2)) {
+				cb({
+					position : [ x, y, z + FLIGHT_DEPTH / 2 ],
+					type : 'light'
+				});
+			}
 		}
 	}
 
@@ -56,37 +95,25 @@ define(function() {
 		});
 
 		// walls
-		cb({// top
-			position : [ 0, WIDTH / 2, -DEPTH / 2 ],
-			rotation : [ -Math.PI / 2, 0, 0 ],
-			height : DEPTH,
-			width : WIDTH,
-			type : 'wall'
-		});
-		cb({// right
-			position : [ WIDTH / 2, 0, -DEPTH / 2 ],
-			rotation : [ -Math.PI / 2, -Math.PI / 2, 0 ],
-			height : DEPTH,
-			width : WIDTH,
-			type : 'wall'
-		});
-		cb({// bottom
-			position : [ 0, -WIDTH / 2, -DEPTH / 2 ],
-			rotation : [ -Math.PI / 2, -Math.PI, 0 ],
-			height : DEPTH,
-			width : WIDTH,
-			type : 'wall'
-		});
-		cb({// left
-			position : [ -WIDTH / 2, 0, -DEPTH / 2 ],
-			rotation : [ -Math.PI / 2, Math.PI / 2, 0 ],
-			height : DEPTH,
-			width : WIDTH,
-			type : 'wall'
-		});
+		makeVerticalTube(cb, 0, 0, WIDTH, 'wall', false);
+
+		// // pillars
+		var pillarOffset = WIDTH / 2 - STEP_WIDTH - PILLAR_WIDTH / 2;
+		makeVerticalTube(cb, pillarOffset, pillarOffset, PILLAR_WIDTH, 'pillar', true);
+		makeVerticalTube(cb, pillarOffset, -pillarOffset, PILLAR_WIDTH, 'pillar', true);
+		makeVerticalTube(cb, -pillarOffset, -pillarOffset, PILLAR_WIDTH, 'pillar', true);
+		makeVerticalTube(cb, -pillarOffset, pillarOffset, PILLAR_WIDTH, 'pillar', true);
+
+		// steps
 		for ( var i = 0; i < FLIGHT_COUNT; i++) {
-			makeSteps(cb, i, i * FLIGHT_DEPTH);
+			makeSteps(cb, i, i * FLIGHT_DEPTH + 1);
 		}
+
+		cb({
+			position : [ 0, 0, -DEPTH + 300 ],
+			type : 'light'
+		});
+
 	}
 
 	return {

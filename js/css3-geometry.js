@@ -32,15 +32,11 @@ define([ './jquery', './transform', './geometry' ], function($, transform, geome
 			container = $(container);
 
 			geometry.create(function(geo) {
-				// cb({
-				// position: [x, y, z],
-				// rotation: [x, y, z],
-				// height: height,
-				// width: width,
-				// type: [floor|wall|step|largeStep]
-				// });
+				if (geo.type === 'light') {
+					return;
+				}
 				var plane = $('<div/>').width(geo.width - 10).height(geo.height - 10);
-				plane.translate(geo.position[0], -geo.position[1], geo.position[2]);
+				plane.translate(geo.position[0], -geo.position[1], geo.position[2] + 1000);
 				plane.matrix(getRotationMatrixFromEuler(geo.rotation));
 				plane.backfaceVisible(false);
 				plane.css({
@@ -57,6 +53,9 @@ define([ './jquery', './transform', './geometry' ], function($, transform, geome
 				}
 				if (geo.type === 'wall') {
 					plane.css('background', 'url(images/pinstripe.png)');
+				}
+				if (geo.type === 'pillar') {
+					plane.css('background', 'black');
 				}
 				container.append(plane);
 			});
