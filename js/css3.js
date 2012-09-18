@@ -1,5 +1,5 @@
-require([ './jquery', './transform', './constants', './css3-geometry', './dat.gui.min' ], function(
-		$, transform, constants, geometry) {
+require([ './jquery', './transform', './constants', './dat.gui.min' ], function($, transform,
+		constants) {
 
 	var LOG_PERSPECTIVE = 'log(perspective)';
 	var PERSPECTIVE = 'perspective';
@@ -8,8 +8,6 @@ require([ './jquery', './transform', './constants', './css3-geometry', './dat.gu
 	var options = {};
 	options[PERSPECTIVE] = 500;
 	options[LOG_PERSPECTIVE] = Math.log(options[PERSPECTIVE]);
-	options.translateZ = 0;
-	options.translateY = 0;
 
 	var container = $('#container').perspective(options[PERSPECTIVE]);
 
@@ -17,10 +15,6 @@ require([ './jquery', './transform', './constants', './css3-geometry', './dat.gu
 		var img = $(this);
 		img.translate.apply(img, constants.positions[i]);
 	});
-
-	var steps = $('<div/>').preserve3d().width(600).height(400).appendTo(container);
-
-	geometry.create(steps);
 
 	var gui = new dat.GUI();
 	gui.add(options, LOG_PERSPECTIVE, Math.log(constants.min), Math.log(MAX)).listen().onChange(
@@ -32,11 +26,4 @@ require([ './jquery', './transform', './constants', './css3-geometry', './dat.gu
 		options[LOG_PERSPECTIVE] = Math.log(options[PERSPECTIVE]);
 		container.perspective(options[PERSPECTIVE]);
 	});
-	gui.add(options, 'translateY', -300, 0).listen().onChange(function(value) {
-		steps.clearTransform().translate(0, options.translateY, options.translateZ);
-	});
-	gui.add(options, 'translateZ', 0, 3600).listen().onChange(function(value) {
-		steps.clearTransform().translate(0, options.translateY, options.translateZ);
-	});
-
 });
