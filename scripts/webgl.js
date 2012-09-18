@@ -1,4 +1,4 @@
-require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ], function($,
+define('webgl', [ 'lib/jquery', 'transform', 'constants', 'lib/dat.gui.min', 'lib/Three' ], function($,
 		transform, constants) {
 
 	var LOG_DISTANCE = 'log(distance)';
@@ -6,9 +6,7 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 	var DISTANCE = 'distance';
 	var CONSTRAIN = 'constrainValues';
 	var REVEAL_CAMERA = 'alternativeView';
-	var FRUSTUM = 'cameraFrustum';
-	var AXIS_HELPER = 'originMarker';
-
+  
 	var WIDTH = 600, HEIGHT = 400, DEPTH = 400 + 5; // prevent z-fighting
 
 	function calcFov(distance) {
@@ -25,8 +23,6 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 	options[FOV] = calcFov(options[DISTANCE]);
 	options[CONSTRAIN] = true;
 	options[REVEAL_CAMERA] = false;
-	options[FRUSTUM] = false;
-	options[AXIS_HELPER] = false;
 	options.needsUpdate = false;
 
 	var container = $('#container');
@@ -108,16 +104,10 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 	gui.add(options, REVEAL_CAMERA).onChange(function() {
 		options.needsUpdate = true;
 	});
-	gui.add(options, AXIS_HELPER).onChange(function() {
-		options.needsUpdate = true;
-	});
-	gui.add(options, FRUSTUM).onChange(function() {
-		options.needsUpdate = true;
-	});
 
 	requestAnimationFrame(function loop() {
 		requestAnimationFrame(loop, container[0]);
-
+    
 		if (options.needsUpdate) {
 			camera.fov = options[FOV];
 			camera.near = options[DISTANCE] - DEPTH / 2;
@@ -131,8 +121,8 @@ require([ './jquery', './transform', './constants', './dat.gui.min', './Three' ]
 			cameraHelper.update();
 
 			// move out of camera view, visibility causes strobing
-			axisHelper.position.x = options[AXIS_HELPER] ? 0 : 1000000;
-			cameraHelper.position.x = options[FRUSTUM] ? 0 : 1000000;
+			axisHelper.position.x = options[REVEAL_CAMERA] ? 0 : 1000000;
+			cameraHelper.position.x = options[REVEAL_CAMERA] ? 0 : 1000000;
 
 			renderer.render(scene, options[REVEAL_CAMERA] ? revealCamera : camera);
 		}
