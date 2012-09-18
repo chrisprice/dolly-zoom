@@ -1,4 +1,4 @@
-define(function() {
+define('constants', function() {
 	return {
 		positions : [
 				[ -200, 0, 200 ],

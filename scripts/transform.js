@@ -1,5 +1,5 @@
-define([ './jquery' ], function($) {
-
+define('transform', [ 'lib/jquery' ], function($) {
+  
 	var prefix = null;
 
 	[ 'Webkit', 'Moz', 'Ms', 'O' ].forEach(function(p) {

@@ -1,4 +1,4 @@
-require([ './jquery', './transform', './constants', './dat.gui.min' ], function($, transform,
+define('css3', [ 'lib/jquery', 'transform', 'constants', 'lib/dat.gui.min' ], function($, transform,
 		constants) {
 
 	var LOG_PERSPECTIVE = 'log(perspective)';
@@ -14,6 +14,8 @@ require([ './jquery', './transform', './constants', './dat.gui.min' ], function(
 	container.children().each(function(i) {
 		var img = $(this);
 		img.translate.apply(img, constants.positions[i]);
+    // also set z-index to the z-position to correct the stacking
+		img.css('zIndex', constants.positions[i][2]);
 	});
 
 	var gui = new dat.GUI();
