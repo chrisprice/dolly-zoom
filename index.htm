@@ -24,7 +24,7 @@
             With some time on my hands I thought I'd dig into the problem and see if I couldn't relate perspective back to the more common 3D camera properties of subject distance and field of view. So I created a <a href="css3.htm">simple 3D scene in CSS</a>, added a slider to adjust the perspective and then set about creating a <a href="webgl.htm">WebGL equivalent</a>.
         </p>
         <p>
-            As the examples prove, the perspective property is in fact just the subject distance but with one additional feature, whenever the subject distance is changed the field of view is <a href="https://github.com/chrisprice/dolly-zoom/blob/master/scripts/webgl.js#L12">automatically adjusted</a> such that the size of any elements on the z=0 plane remain constant.
+            As the examples prove, the perspective property is in fact just the subject distance but with one additional feature: whenever the subject distance is changed the field of view is <a href="https://github.com/chrisprice/dolly-zoom/blob/master/scripts/webgl.js#L12">automatically adjusted</a> such that the size of any element on the z=0 plane remains constant.
         </p>
                 <p>
             If this sounds like something you've seen before, the likelihood is you probably have! Commonly employed when the director wants to create an unsettiling sense of unease, the <a href="http://en.wikipedia.org/wiki/Dolly_zoom">dolly-zoom</a> effect has been used in films such as <a href="http://www.youtube.com/watch?v=svEPWBxpYjo">Jaws</a> and <a href="http://www.youtube.com/watch?v=sgpnJpgX-Hw&feature=player_detailpage#t=13s">Vertigo</a>.
