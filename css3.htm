@@ -1,74 +1,38 @@
 <!doctype html5>
 <html lang="en">
 <head>
-<style>
-
-#container {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 600px;
-	height: 400px;
-	margin-left: -300px;
-	margin-top: -200px;
-	border: 1px solid white;
-	overflow: hidden;
-}
-
-#container img {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: 100px;
-	height: 100px;
-	margin-left: -50px;
-	margin-top: -50px;
-	opacity: 0.5;
-}
-
-body {
-	background: black;
-}
-
-header,footer {
-	position: absolute;
-	left: 0;
-	right: 0;
-	text-align: center;
-	color: white;
-	font: 11px 'Lucida Grande', sans-serif;
-}
-
-a {
-	color: white;
-}
-
-header {
-	top: 0;
-}
-
-footer {
-	bottom: 0;
-}
-</style>
+    <title>dolly-zoom</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <style>
+            #container img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100px;
+                height: 100px;
+                margin-left: -50px;
+                margin-top: -50px;
+                opacity: 0.5;
+            }
+    </style>
 </head>
 <body>
-	<header>
-		dolly-zoom - css3 perspective example - <a
-			href="http://www.github.com/chrisprice" rel="author">chris price</a>
-		- <a href="http://www.scottlogic.co.uk/blog/chris">blog</a>
-	</header>
-	<div id="container">
-		<img src="images/noun_project_308.png"/>
-		<img src="images/noun_project_308.png"/>
-		<img src="images/noun_project_308.png"/>
-		<img src="images/noun_project_308.png"/>
-		<img src="images/noun_project_308.png"/>
-		<img src="images/noun_project_308.png"/>
-		<img src="images/noun_project_308.png"/>
-	</div>
-	<footer></footer>
-	<script type="text/javascript" src="Scripts/lib/require.js"
-		data-main="Scripts/css3"></script>
+    <header>
+        <a href="index.htm">dolly-zoom</a> - css3 perspective example - <a href="webgl.htm">webgl perspective example</a>
+    </header>
+    <div id="container">
+        <img src="images/noun_project_308.png" />
+        <img src="images/noun_project_308.png" />
+        <img src="images/noun_project_308.png" />
+        <img src="images/noun_project_308.png" />
+        <img src="images/noun_project_308.png" />
+        <img src="images/noun_project_308.png" />
+        <img src="images/noun_project_308.png" />
+    </div>
+    <footer>
+        <a href="http://www.github.com/chrisprice" rel="author">chris price</a>
+    </footer>
+    <script type="text/javascript" src="Scripts/lib/require.js"
+        data-main="Scripts/css3"></script>
 </body>
 </html>
