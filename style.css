@@ -1,0 +1,36 @@
+﻿#container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 600px;
+    height: 400px;
+    margin-left: -300px;
+    margin-top: -200px;
+    border: 1px solid white;
+    overflow: hidden;
+}
+
+body {
+    background: black;
+    text-align: center;
+    color: white;
+    font: 11px 'Lucida Grande', sans-serif;
+}
+
+header, footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+a {
+    color: white;
+}
+
+header {
+    top: 5px;
+}
+
+footer {
+    bottom: 5px;
+}
