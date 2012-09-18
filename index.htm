@@ -4,8 +4,10 @@
     <title>dolly-zoom</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <style>
+        #container {
+            border: none;
+        }
         #container p {
-            padding: 6px 10px 0 10px;
             font-size: 16px;
         }
     </style>
@@ -19,13 +21,13 @@
             Most of us have had a play with CSS3 3D transforms, stacked a few elements, rotated them, maybe even made a cube out of them. And somewhere along the way, you’ll probably have set the perspective property, tweaked it, wondered what it did, tweaked it some more, figured it looked ok and then forgot about it.
         </p>
         <p>
-            With some time on my hands I thought I'd dig into problem and see if I couldn't relate perspective back to more common 3D camera properties of subject distance and field of view. So I created a <a href="css3.htm">simple 3D scene in CSS</a> with a slider to adjust the perspective, and then set about creating a <a href="webgl.htm">WebGL equivalent</a>.
+            With some time on my hands I thought I'd dig into the problem and see if I couldn't relate perspective back to the more common 3D camera properties of subject distance and field of view. So I created a <a href="css3.htm">simple 3D scene in CSS</a>, added a slider to adjust the perspective and then set about creating a <a href="webgl.htm">WebGL equivalent</a>.
         </p>
         <p>
-            As the examples prove, the perspective property is in fact just the subject distance but with one additional feature, whenever the subject distance is changed the field of view is <a href="https://github.com/chrisprice/dolly-zoom/blob/master/scripts/webgl.js#L12">automatically adjusted</a> such that the size of any elements on the z=0 plane remains constant.
+            As the examples prove, the perspective property is in fact just the subject distance but with one additional feature, whenever the subject distance is changed the field of view is <a href="https://github.com/chrisprice/dolly-zoom/blob/master/scripts/webgl.js#L12">automatically adjusted</a> such that the size of any elements on the z=0 plane remain constant.
         </p>
                 <p>
-            If this sounds like you've seen it before, the likelihood is you probably have! Commonly employed when the director wants to create an unsettiling sense of unease, the <a href="http://en.wikipedia.org/wiki/Dolly_zoom">dolly-zoom</a> effect has been used in films such as <a href="http://www.youtube.com/watch?v=svEPWBxpYjo">Jaws</a> and <a href="http://www.youtube.com/watch?v=sgpnJpgX-Hw&feature=player_detailpage#t=13s">Vertigo</a>.
+            If this sounds like something you've seen before, the likelihood is you probably have! Commonly employed when the director wants to create an unsettiling sense of unease, the <a href="http://en.wikipedia.org/wiki/Dolly_zoom">dolly-zoom</a> effect has been used in films such as <a href="http://www.youtube.com/watch?v=svEPWBxpYjo">Jaws</a> and <a href="http://www.youtube.com/watch?v=sgpnJpgX-Hw&feature=player_detailpage#t=13s">Vertigo</a>.
         </p>
     </div>
     <footer>
