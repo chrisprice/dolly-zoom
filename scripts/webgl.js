@@ -87,7 +87,8 @@ define('webgl', [ 'lib/jquery', 'transform', 'constants', 'lib/dat.gui.min', 'li
 		}
 		options.needsUpdate = true;
 	});
-	gui.add(options, FOV, calcFov(constants.max), calcFov(constants.min)).listen().onChange(
+	var advanced = gui.addFolder('The Secret Sauce');
+	advanced.add(options, FOV, calcFov(constants.max), calcFov(constants.min)).listen().onChange(
 			function() {
 				if (options[CONSTRAIN]) {
 					options[DISTANCE] = calcDistance(options[FOV]);
@@ -95,13 +96,13 @@ define('webgl', [ 'lib/jquery', 'transform', 'constants', 'lib/dat.gui.min', 'li
 				}
 				options.needsUpdate = true;
 			});
-	gui.add(options, CONSTRAIN).onChange(function() {
+	advanced.add(options, CONSTRAIN).onChange(function () {
 		if (options[CONSTRAIN]) {
 			options[FOV] = calcFov(options[DISTANCE]);
 		}
 		options.needsUpdate = true;
 	});
-	gui.add(options, REVEAL_CAMERA).onChange(function() {
+	advanced.add(options, REVEAL_CAMERA).onChange(function () {
 		options.needsUpdate = true;
 	});
 
